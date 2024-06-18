@@ -11,4 +11,5 @@ WHat is unique in this version and the original version from Matsn0w:
 # 🚨 MISS-ELS: Abel Gaming Edits
 <ul>
   <li>ELS Control Lock (Customizable Key)</li>
+  <li>Added Take Down Key (Customizable Key)</li>
 </ul>
