@@ -18,3 +18,7 @@ RegisterKeyMapping('MISS-ELS:toggle-siren-one', 'Toggle siren 1', 'KEYBOARD', '1
 RegisterKeyMapping('MISS-ELS:toggle-siren-two', 'Toggle siren 2', 'KEYBOARD', '2')
 RegisterKeyMapping('MISS-ELS:toggle-siren-three', 'Toggle siren 3', 'KEYBOARD', '3')
 RegisterKeyMapping('MISS-ELS:toggle-siren-four', 'Toggle siren 4', 'KEYBOARD', '4')
+
+-- custom
+RegisterKeyMapping('MISS-ELS:ELSLOCK', 'Lock ELS', 'KEYBOARD', 'F24')
+RegisterKeyMapping('MISS-ELS:TAKEDOWN', 'Toggle Take Downs', 'KEYBOARD', 'INPUT_VEH_SELECT_PREV_WEAPON')

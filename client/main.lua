@@ -1,3 +1,6 @@
+ELSLocked = false
+TakeDownsOn = false
+
 -- indicator state
 Indicators = {
     left = false,
@@ -169,56 +172,101 @@ end
 
 RegisterCommand('MISS-ELS:toggle-stage-primary', function ()
     if not CanControlELS() then return end
-
-    HandleLightStage('primary')
+    
+    if not ELSLocked then
+        HandleLightStage('primary')
+    end
 end)
 
 RegisterCommand('MISS-ELS:toggle-stage-secondary', function ()
     if not CanControlELS() then return end
-
-    HandleLightStage('secondary')
+    
+    if not ELSLocked then
+        HandleLightStage('secondary')
+    end
 end)
 
 RegisterCommand('MISS-ELS:toggle-stage-warning', function ()
     if not CanControlELS() then return end
-
-    HandleLightStage('warning')
+    
+    if not ELSLocked then
+        HandleLightStage('warning')
+    end
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren', function ()
     if not CanControlELS() then return end
-
-    HandleSiren()
+    
+    if not ELSLocked then
+        HandleSiren()
+    end
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-next', function ()
     if not CanControlELS() then return end
-
-    NextSiren()
+    
+    if not ELSLocked then
+        NextSiren()
+    end
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-one', function ()
     if not CanControlELS() then return end
-
-    HandleSiren(1)
+    
+    if not ELSLocked then
+        HandleSiren(1)
+    end
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-two', function ()
     if not CanControlELS() then return end
-
-    HandleSiren(2)
+    
+    if not ELSLocked then
+        HandleSiren(2)
+    end
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-three', function ()
     if not CanControlELS() then return end
-
-    HandleSiren(3)
+    
+    if not ELSLocked then
+        HandleSiren(3)
+    end
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-four', function ()
     if not CanControlELS() then return end
 
-    HandleSiren(4)
+    if not ELSLocked then
+        HandleSiren(4)
+    end
+end)
+
+RegisterCommand('MISS-ELS:ELSLOCK', function ()
+    if ELSLocked then
+        ELSLocked = false
+    else
+        ELSLocked = true
+    end
+end)
+
+RegisterCommand('MISS-ELS:TAKEDOWN', function ()
+    if not ELSLocked then
+        -- get player vehicle
+        local ped = PlayerPedId()
+        local vehicle = GetVehiclePedIsUsing(ped)
+
+        -- disable auto repairs
+        SetVehicleAutoRepairDisabled(vehicle, true)
+
+        if TakeDownsOn then
+            SetVehicleExtra(vehicle, 11, false)
+            TakeDownsOn = false
+        else
+            SetVehicleExtra(vehicle, 11, true)
+            TakeDownsOn = true
+        end
+    end 
 end)
 
 AddEventHandler('onClientResourceStart', function(name)
@@ -249,7 +297,7 @@ AddEventHandler('onClientResourceStart', function(name)
             local vehicle = GetVehiclePedIsUsing(ped)
 
             -- only run if player is in an ELS enabled vehicle and can control the sirens
-            if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
+            if IsELSVehicle(vehicle) and CanControlSirens(vehicle) and not ELSLocked then
                 -- conflicting controls
                 local controls = {
                     { 0, 58 }, -- INPUT_THROW_GRENADE
@@ -290,4 +338,23 @@ AddEventHandler('onClientResourceStart', function(name)
             Citizen.Wait(0)
         end
     end)
+end)
+
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)	
+		if ELSLocked then
+			-- Draw text
+			SetTextFont(0)
+            SetTextProportional(1)
+            SetTextScale(0.0, 0.3)
+            SetTextDropshadow(0, 0, 0, 0, 255)
+            SetTextEdge(1, 0, 0, 0, 255)
+            SetTextDropShadow()
+            SetTextOutline()
+            SetTextEntry("STRING")
+            AddTextComponentString("~r~ELS Locked")
+            DrawText(0.005, 0.5)
+		end
+	end
 end)
